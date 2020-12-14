@@ -18,10 +18,5 @@ func (s *InMemoryPlayerStore)GetPlayerScore(name string) int {
 }
 
 func (s *InMemoryPlayerStore)RecordWin(name string) {
-	score, ok := s.scores[name]
-	if ok {
-		s.scores[name] = score + 1
-	} else {
-		s.scores[name] = 1
-	}
+	s.scores[name]++
 }
