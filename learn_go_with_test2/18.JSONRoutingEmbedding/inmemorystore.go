@@ -2,21 +2,16 @@ package main
 
 type InMemoryPlayerStore struct {
 	scores map[string]int
-	league []Player
 }
 
 func NewInMemoryPlayerStore() *InMemoryPlayerStore {
 	return &InMemoryPlayerStore{
 		scores: map[string]int{},
-		league: []Player{},
 	}
 }
 
 func (s *InMemoryPlayerStore)GetPlayerScore(name string) int {
-	if score, ok := s.scores[name]; ok {
-		return score
-	}
-	return 0
+	return s.scores[name]
 }
 
 func (s *InMemoryPlayerStore)RecordWin(name string) {
