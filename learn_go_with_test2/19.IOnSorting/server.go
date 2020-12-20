@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 )
 
 type Player struct {
@@ -15,7 +16,7 @@ type Player struct {
 type PlayerStore interface {
 	GetPlayerScore(string) int
 	RecordWin(name string)
-	GetLeague() []Player
+	GetLeague() League
 }
 
 type PlayerServer struct {
@@ -72,10 +73,15 @@ func (p *PlayerServer)processWin(w http.ResponseWriter, name string) {
 }
 
 func main() {
-	store := NewInMemoryPlayerStore()
+	database, err := os.OpenFile("testdb", os.O_RDWR|os.O_CREATE, 0666)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	store, _ := NewFileSystemPlayerStore(database)
 	server := NewPlayerServer(store)
 
-	err := http.ListenAndServe(":5000", server)
+	err = http.ListenAndServe(":5000", server)
 	if err != nil {
 		log.Fatalf("can't start server : %s", err)
 	}
